@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracker/screens/workout/screen.dart';
 
+import 'screens/home/screen.dart';
 import 'screens/workout/screen.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Workouts Tracker',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -29,9 +30,10 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: WorkoutScreen(
-        name: DateTime.now().toString(),
-      ),
+      routes: {
+        '/': (context) => HomeScreen(),
+        '/workout': (context) => WorkoutScreen(),
+      },
     );
   }
 }

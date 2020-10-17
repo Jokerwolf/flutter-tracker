@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'components/exercise.dart';
 
 class WorkoutScreen extends StatefulWidget {
-  final String name;
-
-  const WorkoutScreen({Key key, this.name}) : super(key: key);
-
   @override
   _WorkoutScreenState createState() => _WorkoutScreenState();
 }
@@ -25,7 +21,9 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget addExerciseButton = FloatingActionButton(
+    final name = ModalRoute.of(context).settings.arguments;
+
+    final Widget addExerciseButton = FloatingActionButton(
       onPressed: this._addExercise,
       tooltip: 'Add exercise',
       child: Icon(Icons.add),
@@ -33,7 +31,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(this.widget.name),
+        title: Text(name),
       ),
       body: ListView.builder(
         itemCount: this._exercises.length,
