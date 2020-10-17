@@ -20,12 +20,24 @@ class _ExerciseState extends State<Exercise> {
     });
   }
 
+  void removeExerciseSet() {
+    setState(() {
+      this._exerciseSets = List.from(_exerciseSets)..removeLast();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Widget addSetButton = IconButton(
       splashRadius: 20,
       onPressed: this.addExerciseSet,
       icon: Icon(Icons.add),
+    );
+
+    final Widget removeSetButton = IconButton(
+      splashRadius: 20,
+      onPressed: this.removeExerciseSet,
+      icon: Icon(Icons.remove),
     );
 
     return Container(
@@ -44,6 +56,7 @@ class _ExerciseState extends State<Exercise> {
                 ),
               ),
               addSetButton,
+              removeSetButton,
             ],
           ),
         ],
