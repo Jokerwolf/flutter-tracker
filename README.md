@@ -1,6 +1,6 @@
 # flutter_tracker
 
-A new Flutter project.
+Flutter based workouts tracker. Playing around to learn new things.
 
 ## Getting Started
 
