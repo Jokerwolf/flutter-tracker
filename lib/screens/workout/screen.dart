@@ -2,7 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'components/exercise.dart';
 
+class WorkoutPage extends Page {
+  final String workout;
+
+  WorkoutPage(this.workout);
+
+  @override
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => WorkoutScreen(workout: this.workout),
+    );
+  }
+}
+
 class WorkoutScreen extends StatefulWidget {
+  final String workout;
+
+  const WorkoutScreen({Key key, this.workout}) : super(key: key);
+
   @override
   _WorkoutScreenState createState() => _WorkoutScreenState();
 }
@@ -10,18 +28,9 @@ class WorkoutScreen extends StatefulWidget {
 class _WorkoutScreenState extends State<WorkoutScreen> {
   List<String> _exercises = new List();
 
-  void _addExercise() {
-    this.setState(() {
-      this._exercises = [
-        ...this._exercises,
-        'Exercise ${this._exercises.length}'
-      ];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final name = ModalRoute.of(context).settings.arguments;
+    // final name = ModalRoute.of(context).settings.arguments;
 
     final Widget addExerciseButton = FloatingActionButton(
       onPressed: this._addExercise,
@@ -31,7 +40,7 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(name),
+        title: Text(this.widget.workout),
       ),
       body: ListView.builder(
         itemCount: this._exercises.length,
@@ -41,5 +50,14 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
       ),
       floatingActionButton: addExerciseButton,
     );
+  }
+
+  void _addExercise() {
+    this.setState(() {
+      this._exercises = [
+        ...this._exercises,
+        'Exercise ${this._exercises.length}'
+      ];
+    });
   }
 }
