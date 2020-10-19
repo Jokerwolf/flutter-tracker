@@ -14,9 +14,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  WorkoutTrackerRouteDelegate _routerDelegate = WorkoutTrackerRouteDelegate();
-  WorkoutTrackerRouteInformationParser _routeInformationParser =
-      WorkoutTrackerRouteInformationParser();
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
@@ -25,8 +22,8 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      routeInformationParser: _routeInformationParser,
-      routerDelegate: _routerDelegate,
+      routeInformationParser: new WorkoutTrackerRouteInformationParser(),
+      routerDelegate: new WorkoutTrackerRouteDelegate(),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../screens/home/screen.dart';
 import 'route_data.dart';
 import '../screens/unknown/screen.dart';
 import '../screens/workout/screen.dart';
+import 'route_delegate_state.dart';
 
 class WorkoutTrackerRouteDelegate
     extends RouterDelegate<WorkoutTrackerRoutePath>
@@ -12,8 +13,9 @@ class WorkoutTrackerRouteDelegate
         ChangeNotifier,
         PopNavigatorRouterDelegateMixin<WorkoutTrackerRoutePath> {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  String _selectedWorkout;
-  bool _showUnknown;
+  WorkoutTrackerRouteDelegateState _state;
+  // String _selectedWorkout;
+  // bool _showUnknown;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,8 @@ class WorkoutTrackerRouteDelegate
           key: ValueKey('Home'),
           child: HomeScreen(onTap: this._handleWorkoutTap),
         ),
-        if (this._selectedWorkout != null) WorkoutPage(this._selectedWorkout),
-        if (this._showUnknown)
+        if (this._state is WorkoutState) WorkoutPage(this._state.getData()),
+        if (this._state is UnknownState)
           MaterialPage(key: ValueKey('Unknown'), child: UnknownScreen()),
       ],
       onPopPage: (route, result) {
@@ -33,8 +35,8 @@ class WorkoutTrackerRouteDelegate
         }
 
         // Update the list of pages
-        this._selectedWorkout = null;
-        this._showUnknown = false;
+        this._setState(new HomeState());
+        // this._showUnknown = false;
         this.notifyListeners();
 
         return true;
@@ -45,35 +47,35 @@ class WorkoutTrackerRouteDelegate
   @override
   Future<void> setNewRoutePath(WorkoutTrackerRoutePath configuration) async {
     if (configuration.isUnknown) {
-      this._showUnknown = true;
-      this._selectedWorkout = null;
+      this._setState(new UnknownState());
       return;
     }
 
     if (configuration.isHomePage) {
-      this._showUnknown = false;
-      this._selectedWorkout = null;
+      this._setState(new HomeState());
       return;
     }
 
     if (configuration.isWorkoutPage) {
-      this._showUnknown = false;
-      this._selectedWorkout = configuration.workoutId;
+      this._setState(new WorkoutState(configuration.workoutId));
       return;
     }
 
-    this._showUnknown = true;
-    this._selectedWorkout = null;
+    this._setState(new UnknownState());
   }
 
   @override
   WorkoutTrackerRoutePath get currentConfiguration =>
-      this._selectedWorkout == null
+      !(this._state is WorkoutState)
           ? WorkoutTrackerRoutePath.home()
-          : WorkoutTrackerRoutePath.workout(this._selectedWorkout);
+          : WorkoutTrackerRoutePath.workout(this._state.getData());
 
   _handleWorkoutTap(workout) {
-    this._selectedWorkout = workout.toString().replaceAll(' ', '_');
+    this._setState(new WorkoutState(workout.toString().replaceAll(' ', '_')));
     this.notifyListeners();
+  }
+
+  _setState(WorkoutTrackerRouteDelegateState state) {
+    if (this._state != state) this._state = state;
   }
 }
