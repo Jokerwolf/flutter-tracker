@@ -1,13 +1,13 @@
 class WorkoutTrackerRoutePath {
-  final String _workoutId;
+  final String workoutId;
   final bool _showUnknown;
 
   WorkoutTrackerRoutePath.home()
-      : _workoutId = null,
+      : workoutId = null,
         _showUnknown = false;
-  WorkoutTrackerRoutePath.workout(this._workoutId) : this._showUnknown = false;
+  WorkoutTrackerRoutePath.workout(this.workoutId) : this._showUnknown = false;
   WorkoutTrackerRoutePath.unknown()
-      : _workoutId = null,
+      : workoutId = null,
         _showUnknown = true;
 
   WorkoutTrackerRoutePath get currentConfiguration {
@@ -15,14 +15,14 @@ class WorkoutTrackerRoutePath {
       return WorkoutTrackerRoutePath.unknown();
     }
 
-    return _workoutId == null
+    return workoutId == null
         ? WorkoutTrackerRoutePath.home()
-        : WorkoutTrackerRoutePath.workout(this._workoutId);
+        : WorkoutTrackerRoutePath.workout(this.workoutId);
   }
 
-  bool get isHomePage => !this.isUnknown && this._workoutId == null;
+  bool get isHomePage => !this.isUnknown && this.workoutId == null;
 
-  bool get isWorkoutPage => !this.isUnknown && this._workoutId != null;
+  bool get isWorkoutPage => !this.isUnknown && this.workoutId != null;
 
   bool get isUnknown => this._showUnknown;
 }

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tracker/screens/workout/screen.dart';
 
-import 'screens/home/screen.dart';
-import 'screens/workout/screen.dart';
-import 'screens/workout/screen.dart';
-import 'screens/workout/screen.dart';
+import 'routing/route_delegate.dart';
+import 'routing/route_information_parser.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,41 +14,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  WorkoutTrackerRouteDelegate _routerDelegate = WorkoutTrackerRouteDelegate();
+  WorkoutTrackerRouteInformationParser _routeInformationParser =
+      WorkoutTrackerRouteInformationParser();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Workouts Tracker',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Navigator(
-        pages: [
-          MaterialPage(
-            key: ValueKey('Home'),
-            child: HomeScreen(onTap: this._handleWorkoutTap),
-          ),
-          if (this._selectedWorkout != null) WorkoutPage(this._selectedWorkout)
-        ],
-        onPopPage: (route, result) {
-          if (!route.didPop(result)) {
-            return false;
-          }
-
-          // Update the list of pages
-          setState(() {
-            this._selectedWorkout = null;
-          });
-
-          return true;
-        },
-      ),
+      routeInformationParser: _routeInformationParser,
+      routerDelegate: _routerDelegate,
     );
-  }
-
-  _handleWorkoutTap(workout) {
-    setState(() {
-      this._selectedWorkout = workout.toString().replaceAll(' ', '_');
-    });
   }
 }
