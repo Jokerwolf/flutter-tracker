@@ -1,47 +1,57 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  final ValueChanged onTap;
+import 'package:flutter_tracker/models/tracker_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_tracker/models/workout_data_model.dart';
+import 'package:provider/provider.dart';
 
-  const HomeScreen({Key key, @required this.onTap}) : super(key: key);
+class HomePage extends Page {
+  final void Function(WorkoutDataModel) onWorkoutTap;
+
+  HomePage(this.onWorkoutTap) : super(key: ValueKey('Home'));
+
+  @override
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => HomeScreen(this.onWorkoutTap),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  final void Function(WorkoutDataModel) onWorkoutTap;
+
+  const HomeScreen(this.onWorkoutTap);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> _workouts = new List();
-
   @override
   Widget build(BuildContext context) {
-    final Widget addWorkoutButton = FloatingActionButton(
-      onPressed: this._addWorkout,
-      tooltip: 'Add workout',
-      child: Icon(Icons.add),
+    return Consumer<TrackerModel>(
+      builder: (BuildContext context, model, Widget child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(AppLocalizations.of(context).appTitle),
+          ),
+          body: ListView.builder(
+            physics: BouncingScrollPhysics(),
+            itemCount: model.workouts.length,
+            itemBuilder: (context, i) => ListTile(
+              title: Text(model.workouts[i].title),
+              onTap: () => this.widget.onWorkoutTap(model.workouts[i]),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: context.read<TrackerModel>().addWorkout,
+            tooltip: AppLocalizations.of(context).addWorkout_tooltip,
+            child: Icon(Icons.add),
+          ),
+        );
+      },
     );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Workouts tracker'),
-      ),
-      body: ListView.builder(
-        itemCount: this._workouts.length,
-        itemBuilder: (context, i) => ListTile(
-          title: Text(this._workouts[i]),
-          onTap: () => this.widget.onTap(this._workouts[i]),
-        ),
-      ),
-      floatingActionButton: addWorkoutButton,
-    );
-  }
-
-  // void _onWorkoutTap(BuildContext context, String name) {
-  // Navigator.pushNamed(context, '/workout', arguments: name);
-  // }
-
-  void _addWorkout() {
-    this.setState(() {
-      this._workouts = [...this._workouts, 'Workout ${this._workouts.length}'];
-    });
   }
 }

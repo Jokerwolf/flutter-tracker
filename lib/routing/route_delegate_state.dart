@@ -1,28 +1,28 @@
-abstract class WorkoutTrackerRouteDelegateState {
+abstract class WTRouteDelegateState {
   getData();
 }
 
-class HomeState extends WorkoutTrackerRouteDelegateState {
+class HomeState extends WTRouteDelegateState {
   @override
   getData() {
     return null;
   }
 }
 
-class UnknownState extends WorkoutTrackerRouteDelegateState {
+class UnknownState extends WTRouteDelegateState {
   @override
   getData() {
     return null;
   }
 }
 
-class WorkoutState extends WorkoutTrackerRouteDelegateState {
-  final String _data;
+class WorkoutState extends WTRouteDelegateState {
+  final int _id;
 
-  WorkoutState(this._data);
+  WorkoutState(this._id);
 
   @override
   getData() {
-    return this._data;
+    return this._id;
   }
 }

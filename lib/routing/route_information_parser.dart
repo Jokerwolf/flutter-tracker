@@ -2,34 +2,37 @@ import 'package:flutter/material.dart';
 
 import 'route_data.dart';
 
-class WorkoutTrackerRouteInformationParser
-    extends RouteInformationParser<WorkoutTrackerRoutePath> {
+/// Valid routes:
+/// * / - home route
+/// * workout/:id - particular workout route
+class WTRouteInformationParser extends RouteInformationParser<WTRoutePath> {
   @override
-  Future<WorkoutTrackerRoutePath> parseRouteInformation(
+  Future<WTRoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location);
 
     // Handle '/'
     if (uri.pathSegments.length == 0) {
-      return WorkoutTrackerRoutePath.home();
+      return WTRoutePath.home();
     }
 
     // Handle workout/:id
     if (uri.pathSegments.length == 2) {
-      if (uri.pathSegments[0] != 'workout')
-        return WorkoutTrackerRoutePath.unknown();
-      final id = uri.pathSegments[1];
+      if (uri.pathSegments[0] != 'workout' || uri.pathSegments[1] == null)
+        return WTRoutePath.unknown();
 
-      if (id == null) return WorkoutTrackerRoutePath.unknown();
-      return WorkoutTrackerRoutePath.workout(id);
+      final workoiutId = int.tryParse(uri.pathSegments[1]);
+      if (workoiutId == null) return WTRoutePath.unknown();
+
+      return WTRoutePath.workout(workoiutId);
     }
 
     // Handle unknown routes
-    return WorkoutTrackerRoutePath.unknown();
+    return WTRoutePath.unknown();
   }
 
   @override
-  RouteInformation restoreRouteInformation(WorkoutTrackerRoutePath path) {
+  RouteInformation restoreRouteInformation(WTRoutePath path) {
     if (path.isUnknown) {
       return RouteInformation(location: '/404');
     }

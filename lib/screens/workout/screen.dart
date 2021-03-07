@@ -1,63 +1,70 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_tracker/models/tracker_model.dart';
+import 'package:provider/provider.dart';
 import 'components/exercise.dart';
 
 class WorkoutPage extends Page {
-  final String workout;
+  final int workoutId;
 
-  WorkoutPage(this.workout);
+  WorkoutPage(this.workoutId) : super(key: ValueKey(workoutId));
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => WorkoutScreen(workout: this.workout),
+      builder: (context) {
+        return WorkoutScreen(this.workoutId);
+      },
     );
   }
 }
 
 class WorkoutScreen extends StatefulWidget {
-  final String workout;
+  final int workoutId;
 
-  const WorkoutScreen({Key key, this.workout}) : super(key: key);
+  const WorkoutScreen(this.workoutId);
 
   @override
   _WorkoutScreenState createState() => _WorkoutScreenState();
 }
 
 class _WorkoutScreenState extends State<WorkoutScreen> {
-  List<String> _exercises = new List();
-
   @override
   Widget build(BuildContext context) {
-    // final name = ModalRoute.of(context).settings.arguments;
-
-    final Widget addExerciseButton = FloatingActionButton(
-      onPressed: this._addExercise,
-      tooltip: 'Add exercise',
-      child: Icon(Icons.add),
-    );
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(this.widget.workout),
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode focusScopeNode = FocusScope.of(context);
+        if (!focusScopeNode.hasPrimaryFocus) focusScopeNode.unfocus();
+      },
+      child: Consumer<TrackerModel>(
+        builder: (BuildContext context, model, Widget child) {
+          final exercises =
+              model.getExercisesFor(workoutId: this.widget.workoutId);
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(model.getWorkout(widget.workoutId).title),
+            ),
+            body: ListView.builder(
+              itemCount: exercises.length,
+              itemBuilder: (context, i) => ListTile(
+                title: Exercise(exercises[i].getId()),
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: this._addExercise,
+              tooltip: AppLocalizations.of(context).addExercise_tooltip,
+              child: Icon(Icons.add),
+            ),
+          );
+        },
       ),
-      body: ListView.builder(
-        itemCount: this._exercises.length,
-        itemBuilder: (context, i) => ListTile(
-          title: Exercise(name: _exercises[i]),
-        ),
-      ),
-      floatingActionButton: addExerciseButton,
     );
   }
 
   void _addExercise() {
-    this.setState(() {
-      this._exercises = [
-        ...this._exercises,
-        'Exercise ${this._exercises.length}'
-      ];
-    });
+    Provider.of<TrackerModel>(context, listen: false)
+        .addExerciseFor(workoutId: this.widget.workoutId);
   }
 }

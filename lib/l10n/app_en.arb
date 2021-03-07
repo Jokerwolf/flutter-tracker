@@ -1,0 +1,14 @@
+{
+  "appTitle": "Workout Tracker",
+  "@appTitle": {
+    "description": "The title of the app"
+  },
+  "addWorkout_tooltip": "Add workout",
+  "@addWorkout_tooltip": {
+    "description": "Tooltip for the Add Workout button"
+  },
+  "addExercise_tooltip": "Add exercise",
+  "@addExercise_tooltip": {
+    "description": "Tooltip for the Add Exercise button"
+  }
+}
